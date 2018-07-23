@@ -52,6 +52,11 @@ RCT_EXPORT_METHOD(loadProductWithParameters:(NSDictionary *)args callback: (RCTR
 
 RCT_EXPORT_METHOD(presentViewController: (BOOL)animated callback: (RCTResponseSenderBlock)callback)
 {
+  if (self.storeProductView.parentViewController || self.storeProductView.presentingViewController) {
+    NSError *error = [[NSError alloc] initWithDomain:@"RJHStoreViewManager" code:101 userInfo:nil];
+    callback(@[error]);
+    return;
+  }
     UIViewController *rootViewController = RCTPresentedViewController();
     [self sendEventWithNameIfListening:@"RJHStoreViewManagerPresenting" body:nil];
     [rootViewController presentViewController:self.storeProductView animated:animated completion:^() {
